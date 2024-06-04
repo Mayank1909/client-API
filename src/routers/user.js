@@ -2,7 +2,7 @@ import { Router } from 'express'
 import insertUser from '../model/User.model.js';
 import { User } from '../model/User.schema.js';
 
-import hashPassword from '../helper/hashPassword.js';
+import { hashPassword, comparepassword } from '../helper/hashPassword.js';
 
 const router = Router();
 
@@ -44,6 +44,33 @@ router.post("/", async (req, res, next) => {
         res.json({ status: "404", message: error.message })
     }
     // res.json({ message: "return form user router" })
+
+})
+
+router.post("/login", async (req, res, next) => {
+    const { email, password } = req.body
+    if (!email || !password) {
+        console.log("error")
+        res.json({ status: "error", message: "please enter all crendentials" })
+    }
+    const user = await User.findOne({
+        $or: [{ email }]
+    })
+    // if (!user) {
+    //     res.json("User does not exist ")
+    // }
+    const passfromDb = user && user._id ? user.password : null;
+
+    if (!passfromDb) {
+        return res.json({ status: "error", message: "credentials does not match" });
+    }
+    const result = await comparepassword(password, passfromDb)
+    console.log(result)
+    if (!result) {
+        return res.json({ status: "error", message: "credentials does not match" });
+    }
+    res.json({ status: "success", message: "Login Succesfully" })
+
 
 })
 
