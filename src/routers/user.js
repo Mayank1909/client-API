@@ -1,8 +1,9 @@
 import { Router } from 'express'
-import insertUser from '../model/User.model.js';
+import { insertUser } from '../model/User.model.js';
 import { User } from '../model/User.schema.js';
 
 import { hashPassword, comparepassword } from '../helper/hashPassword.js';
+import { createJWT, refreshJWT } from '../helper/jwt.js';
 
 const router = Router();
 
@@ -64,14 +65,31 @@ router.post("/login", async (req, res, next) => {
     if (!passfromDb) {
         return res.json({ status: "error", message: "credentials does not match" });
     }
+
+
     const result = await comparepassword(password, passfromDb)
     console.log(result)
     if (!result) {
         return res.json({ status: "error", message: "credentials does not match" });
     }
-    res.json({ status: "success", message: "Login Succesfully" })
+    //creating tokens
+    const accessjwt = await createJWT(user.email);
+    const refreshjwt = await refreshJWT(user.email, user._id);
 
 
+    // res.json({ status: "success", message: "Login Succesfully", accessjwt, refreshjwt })
+    const options = {
+        httpOnly: true,
+        secure: true
+    }
+
+    return res.status(200).cookie("accessToken", accessjwt, options).cookie("refershToken", refreshjwt, options).json(
+        {
+            status: "200",
+            user, accessjwt, refreshjwt
+            , message: "User logged in successfully"
+        }
+    )
 })
 
 
