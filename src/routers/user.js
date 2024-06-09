@@ -1,9 +1,10 @@
 import { Router } from 'express'
-import { insertUser } from '../model/User.model.js';
+import { getUserById, insertUser } from '../model/User.model.js';
 import { User } from '../model/User.schema.js';
 
 import { hashPassword, comparepassword } from '../helper/hashPassword.js';
 import { createJWT, refreshJWT } from '../helper/jwt.js';
+import { userAuthorization } from '../middleware/authorisation.js';
 
 const router = Router();
 
@@ -12,6 +13,19 @@ router.all("/", (req, res, next) => {
     next();
 })
 
+router.get("/", userAuthorization, async (req, res) => {
+
+    const _id = req.userid;
+    const userProfile = await getUserById(_id);
+    const { name, email } = userProfile;
+    res.json({
+        user: {
+            userProfile
+
+        }
+    })
+    // res.json({ user })
+})
 router.post("/", async (req, res, next) => {
     const { name, company, address, email, password, phone } = req.body;
     const existedUser = await User.findOne({

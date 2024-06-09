@@ -8,6 +8,16 @@ export const insertUser = (userObj) => {
             .catch((error) => console.log(error));
     });
 }
+export const getUserById = async (_id) => {
+    try {
+        const user = await User.findOne(_id)
+        if (!user) return res.json({ status: "error", message: "forbidden" })
+        return user;
+
+    } catch (error) {
+        return error
+    }
+};
 export const storeUserRefreshToken = async (_id, token) => {
     return new Promise((resolve, reject) => {
         try {

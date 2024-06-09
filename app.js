@@ -5,6 +5,7 @@ import helmet from 'helmet'
 import cors from 'cors'
 import bodyParser from 'body-parser'
 import morgan from 'morgan'
+import cookieParser from "cookie-parser";
 const app = express();
 
 // connnection to mongodb
@@ -14,6 +15,7 @@ mongoose.connect(process.env.MONGO_URL)
 app.use(helmet());
 app.use(cors());
 app.use(morgan());
+app.use(cookieParser());
 // setting body parser
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
@@ -35,6 +37,7 @@ const port = process.env.PORT || 3001;
 import userRouter from "./src/routers/user.js"
 import ticketRouter from "./src/routers/ticket.js"
 import handleError from './src/errorhandle.js'
+
 
 app.use("/v1/user", userRouter);
 app.use("/v1/ticket", ticketRouter)
