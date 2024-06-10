@@ -3,17 +3,18 @@ import { storeUserRefreshToken } from '../model/User.model.js';
 // import { getJWT, setJWT } from './redis.js';
 
 
-export const createJWT = async (user) => {
+export const createJWT = async (email, _id) => {
     const payload = {
-        _id: user._id,
-        email: user.email,
+        _id: _id,
+        email: email,
         // Include any other fields you need
     };
-    return jwt.sign(payload, process.env.JWT_ACCESS_TOKEN, { expiresIn: '1h' });
+    return jwt.sign(payload, process.env.JWT_ACCESS_TOKEN,
+        { expiresIn: '1m' });
 };
 export const refreshJWT = async (email, _id) => {
     const refreshjwt = jwt.sign({ email }, process.env.JWT_REFRESH_TOKEN, {
-        expiresIn: "1h",
+        expiresIn: "30d",
     })
     await storeUserRefreshToken(_id, refreshjwt);
 

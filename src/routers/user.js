@@ -17,7 +17,7 @@ router.get("/", userAuthorization, async (req, res) => {
 
     const _id = req.userid;
     const userProfile = await getUserById(_id);
-    const { name, email } = userProfile;
+    // const { name, email } = userProfile;
     res.json({
         user: {
             userProfile
@@ -87,7 +87,7 @@ router.post("/login", async (req, res, next) => {
         return res.json({ status: "error", message: "credentials does not match" });
     }
     //creating tokens
-    const accessjwt = await createJWT(user.email);
+    const accessjwt = await createJWT(user.email, user._id);
     const refreshjwt = await refreshJWT(user.email, user._id);
 
 

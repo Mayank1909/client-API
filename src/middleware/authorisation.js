@@ -3,7 +3,7 @@ import { User } from "../model/User.schema.js";
 
 export const userAuthorization = async (req, res, next) => {
     const { authorization } = req.headers;
-    console.log({ authorization });
+    // console.log({ authorization });
 
     const decodeToken = verifyAccessJWT(authorization);
     if (!decodeToken) {
@@ -13,9 +13,9 @@ export const userAuthorization = async (req, res, next) => {
     if (!userid) {
         return res.status(403).json({ message: "forbidden" });
     }
-    console.log(userid)
+    // console.log(userid)
 
-    console.log(decodeToken)
+    // console.log(decodeToken)
     req.userId = userid;
 
     return next();

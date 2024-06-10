@@ -37,10 +37,12 @@ const port = process.env.PORT || 3001;
 import userRouter from "./src/routers/user.js"
 import ticketRouter from "./src/routers/ticket.js"
 import handleError from './src/errorhandle.js'
+import tokensRouter from './src/routers/token.js'
 
 
 app.use("/v1/user", userRouter);
 app.use("/v1/ticket", ticketRouter)
+app.use("/v1/token", tokensRouter)
 // app.use("/", (req, res, next) => {
 //     res.json("hey I am Good")
 // })

@@ -18,6 +18,17 @@ export const getUserById = async (_id) => {
         return error
     }
 };
+export const getUserByEmail = ({ email }) => {
+
+    try {
+        const user = User.findOne(email)
+        if (!user) return res.json({ status: "error", message: "forbidden" })
+        return user;
+    } catch (error) {
+        reject(error);
+    }
+
+};
 export const storeUserRefreshToken = async (_id, token) => {
     return new Promise((resolve, reject) => {
         try {
