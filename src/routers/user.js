@@ -1,10 +1,12 @@
 import { Router } from 'express'
-import { getUserById, insertUser } from '../model/User.model.js';
+import { getUserByEmail, getUserById, insertUser } from '../model/User.model.js';
 import { User } from '../model/User.schema.js';
 
 import { hashPassword, comparepassword } from '../helper/hashPassword.js';
 import { createJWT, refreshJWT } from '../helper/jwt.js';
 import { userAuthorization } from '../middleware/authorisation.js';
+import { setPasswordResetPin } from '../model/reset-pin/ResetPin.model.js';
+import { emailProcessor } from '../helper/email.helper.js';
 
 const router = Router();
 
@@ -104,6 +106,39 @@ router.post("/login", async (req, res, next) => {
             , message: "User logged in successfully"
         }
     )
+})
+
+// reset password
+// 1. recieve mail
+// 2. check if user exist for the email
+
+// 4. save pin and email in databse
+// 5. email the pin to user
+
+// Update password
+// 1. recive email pin and new password
+// 2. validate the pin 
+// 3. encrypt the new password 
+// 4. update in databse
+// 5. send email notification 
+
+// serverside validation
+router.post("/reset-password", async (req, res) => {
+    const { email } = req.body;
+    const user = await getUserByEmail(email);
+    if (user && user._id) {
+        // 3. if exist create a unique 6 digit code 
+        // res.json("hello")
+        const resetPin = await setPasswordResetPin(email);
+        console.log(resetPin)
+
+        const result = await emailProcessor(email, resetPin.pin)
+        if (result && result.messageId) {
+            return res.status(200).json({ message: "mail sent", id: messageId })
+        }
+
+    }
+    // res.status(403).json({ message: "If the email is exist in our database, the password reset pin will be sent shortly" })
 })
 
 
