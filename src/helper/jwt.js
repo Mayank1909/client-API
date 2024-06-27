@@ -10,7 +10,7 @@ export const createJWT = async (email, _id) => {
         // Include any other fields you need
     };
     return jwt.sign(payload, process.env.JWT_ACCESS_TOKEN,
-        { expiresIn: '1m' });
+        { expiresIn: '1d' });
 };
 export const refreshJWT = async (email, _id) => {
     const refreshjwt = jwt.sign({ email }, process.env.JWT_REFRESH_TOKEN, {

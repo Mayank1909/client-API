@@ -16,3 +16,19 @@ export const setPasswordResetPin = async (email) => {
             .catch((error) => reject(error))
     })
 }
+
+export const getPinByEmail = (email, pin) => {
+    const find = ResetPin.findOne({ email, pin })
+    return find;
+}
+export const deletePin = (email, pin) => {
+    try {
+        ResetPinSchema.findOneAndDelete({ email, pin }, (error, data) => {
+            if (error) {
+                console.log(error);
+            }
+        });
+    } catch (error) {
+        console.log(error);
+    }
+};

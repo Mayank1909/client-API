@@ -14,6 +14,11 @@ const ResetPinSchema = new Schema({
         required: true,
         unique: false
     },
+    addedAt: {
+        type: Date,
+        required: true,
+        default: Date.now(),
+    },
 
 });
 

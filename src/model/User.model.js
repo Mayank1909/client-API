@@ -11,8 +11,8 @@ export const insertUser = (userObj) => {
 export const getUserById = async (_id) => {
     try {
         const user = await User.findOne(_id)
-        if (!user) return res.json({ status: "error", message: "forbidden" })
-        return user;
+        if (user)
+            return user;
 
     } catch (error) {
         return error
@@ -48,5 +48,26 @@ export const storeUserRefreshToken = async (_id, token) => {
             reject(error);
         }
     })
+};
+export const updatePassword = (email, newhashedPass) => {
+    return new Promise((resolve, reject) => {
+        try {
+            User.findOneAndUpdate(
+                { email },
+                {
+                    $set: { password: newhashedPass },
+                },
+                { new: true }
+            )
+                .then((data) => resolve(data))
+                .catch((error) => {
+                    console.log(error);
+                    reject(error);
+                });
+        } catch (error) {
+            console.log(error);
+            reject(error);
+        }
+    });
 };
 
