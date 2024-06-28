@@ -1,6 +1,6 @@
 import mongoose, { Schema } from 'mongoose'
 
-const TciketSchema = new Schema({
+const TicketSchema = new Schema({
     clientId: {
         type: Schema.Types.ObjectId,
     },
@@ -45,4 +45,4 @@ const TciketSchema = new Schema({
     ],
 })
 
-export const Ticket = mongoose.model("Ticket", TciketSchema)
+export const Ticket = mongoose.model("Ticket", TicketSchema)
