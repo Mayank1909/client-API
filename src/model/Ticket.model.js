@@ -71,3 +71,14 @@ export const updateStatusClose = ({ _id, clientId }) => {
         }
     });
 };
+export const deleteTicket = ({ _id, clientId }) => {
+    return new Promise((resolve, reject) => {
+        try {
+            Ticket.findOneAndDelete({ _id, clientId })
+                .then((data) => resolve(data))
+                .catch((error) => reject(error));
+        } catch (error) {
+            reject(error);
+        }
+    });
+};

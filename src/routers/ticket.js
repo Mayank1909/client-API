@@ -1,5 +1,5 @@
 import { Router } from 'express'
-import { insertTicket, getTickets, getTicketsById, updateClientReply, updateStatusClose } from '../model/Ticket.model.js';
+import { insertTicket, getTickets, getTicketsById, updateClientReply, updateStatusClose, deleteTicket } from '../model/Ticket.model.js';
 import { userAuthorization } from '../middleware/authorisation.js';
 
 const router = Router()
@@ -97,5 +97,22 @@ router.patch("/close-ticket/:_id", userAuthorization, async (req, res, nect) => 
 
     res.status(400).json({ message: error })
 })
+
+//deleting the ticket 
+router.delete("/:_id", userAuthorization, async (req, res) => {
+    try {
+        const { _id } = req.params;
+        const clientId = req.userId;
+
+        const result = await deleteTicket({ _id, clientId });
+
+        return res.json({
+            status: "success",
+            message: "The ticket has been deleted",
+        });
+    } catch (error) {
+        res.json({ status: "error", message: error.message });
+    }
+});
 
 export default ticketRouter;
