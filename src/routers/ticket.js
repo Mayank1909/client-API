@@ -1,5 +1,5 @@
 import { Router } from 'express'
-import { insertTicket, getTickets } from '../model/Ticket.model.js';
+import { insertTicket, getTickets, getTicketsById } from '../model/Ticket.model.js';
 import { userAuthorization } from '../middleware/authorisation.js';
 
 const router = Router()
@@ -53,6 +53,17 @@ router.get("/", userAuthorization, async (req, res, nect) => {
 
     const userId = req.userId
     const result = await getTickets(userId);
+
+    return res.status(200).json({ result })
+
+    res.status(400).json({ message: error })
+})
+
+router.get("/:_id", userAuthorization, async (req, res, nect) => {
+
+    const { _id } = req.params;
+    const userId = req.userId
+    const result = await getTicketsById(_id, userId);
 
     return res.status(200).json({ result })
 

@@ -22,4 +22,14 @@ export const getTickets = (clientId) => {
             .catch((error) => reject(error));
     })
 }
+export const getTicketsById = (_id, clientId) => {
+
+    return new Promise((resolve, reject) => {
+
+        Ticket
+            .find({ _id, clientId })
+            .then((data) => resolve(data))
+            .catch((error) => reject(error));
+    })
+}
 
