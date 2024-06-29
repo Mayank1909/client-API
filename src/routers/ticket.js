@@ -1,6 +1,9 @@
 import { Router } from 'express'
-import { insertTicket } from '../model/Ticket.model.js';
+import { insertTicket, getTickets } from '../model/Ticket.model.js';
+import { userAuthorization } from '../middleware/authorisation.js';
+
 const router = Router()
+
 
 
 // workflow
@@ -22,8 +25,8 @@ const ticketRouter = router.all("/", (req, res, next) => {
     next();
 })
 
-
-router.post("/", async (req, res, nect) => {
+// get a new ticket 
+router.post("/", userAuthorization, async (req, res, nect) => {
     const { subject, sender, message } = req.body;
     const ticketObj = {
         clientId: '665ee13e0142603154eb16ca',
@@ -39,6 +42,19 @@ router.post("/", async (req, res, nect) => {
     if (result._id) {
         return res.status(200).json({ message: "success" })
     }
+
+    res.status(400).json({ message: error })
+})
+
+
+// getting all ticket for a specific user 
+
+router.get("/", userAuthorization, async (req, res, nect) => {
+
+    const userId = req.userId
+    const result = await getTickets(userId);
+
+    return res.status(200).json({ result })
 
     res.status(400).json({ message: error })
 })
