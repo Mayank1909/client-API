@@ -2,7 +2,7 @@ import { verifyAccessJWT } from "../helper/jwt.js";
 import { getUserByEmail, getUserById } from "../model/User.model.js";
 import { User } from "../model/User.schema.js";
 
-export const userAuthorization = async (req, res, next) => {
+export const ticketAuthorization = async (req, res, next) => {
     const { authorization } = req.headers;
     // console.log({ authorization });
 
@@ -12,7 +12,7 @@ export const userAuthorization = async (req, res, next) => {
     }
     if (decodeToken.email) {
         console.log(decodeToken)
-        const userid = await getUserByEmail(decodeToken.email)
+        const userid = decodeToken._id;
         if (!userid) {
             return res.status(403).json({ message: "forbidden" });
         }

@@ -22,10 +22,12 @@ export const getUserByEmail = ({ email }) => {
 
     try {
         const user = User.findOne(email)
+        console.log(user)
         if (!user) return res.json({ status: "error", message: "forbidden" })
         return user;
+
     } catch (error) {
-        reject(error);
+        console.log(error);
     }
 
 };

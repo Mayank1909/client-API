@@ -1,6 +1,7 @@
 import { Router } from 'express'
 import { insertTicket, getTickets, getTicketsById, updateClientReply, updateStatusClose, deleteTicket } from '../model/Ticket.model.js';
 import { userAuthorization } from '../middleware/authorisation.js';
+import { ticketAuthorization } from '../middleware/ticketauthorisation.js';
 
 const router = Router()
 
@@ -25,11 +26,12 @@ const ticketRouter = router.all("/", (req, res, next) => {
     next();
 })
 
-// get a new ticket 
-router.post("/", userAuthorization, async (req, res, nect) => {
+// create a new ticket 
+router.post("/", ticketAuthorization, async (req, res, nect) => {
     const { subject, sender, message } = req.body;
+    const userId = req.userId;
     const ticketObj = {
-        clientId: '665ee13e0142603154eb16ca',
+        clientId: userId,
         subject,
         conversations: [
             {
@@ -49,7 +51,7 @@ router.post("/", userAuthorization, async (req, res, nect) => {
 
 // getting all ticket for a specific user 
 
-router.get("/", userAuthorization, async (req, res, nect) => {
+router.get("/", ticketAuthorization, async (req, res, nect) => {
 
     const userId = req.userId
     const result = await getTickets(userId);
@@ -60,7 +62,7 @@ router.get("/", userAuthorization, async (req, res, nect) => {
 })
 
 // getting a specific ticket 
-router.get("/:_id", userAuthorization, async (req, res, nect) => {
+router.get("/:_id", userAuthorization, async (req, res, next) => {
 
     const { _id } = req.params;
     const userId = req.userId
@@ -72,7 +74,7 @@ router.get("/:_id", userAuthorization, async (req, res, nect) => {
 })
 
 // updating a ticket form client
-router.put("/:_id", userAuthorization, async (req, res, nect) => {
+router.put("/:_id", userAuthorization, async (req, res, next) => {
     const { message, sender } = req.body;
 
     const { _id } = req.params;
@@ -85,7 +87,7 @@ router.put("/:_id", userAuthorization, async (req, res, nect) => {
 })
 
 // update status to close
-router.patch("/close-ticket/:_id", userAuthorization, async (req, res, nect) => {
+router.patch("/close-ticket/:_id", userAuthorization, async (req, res, next) => {
 
     const { _id } = req.params;
     const clientId = req.userId
